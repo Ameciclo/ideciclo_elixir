@@ -1,0 +1,57 @@
+[
+  {
+    "city": "Recife",
+    "year": 2016,
+    "ideciclo_rating": 0.059
+  },
+  {
+    "city": "Recife",
+    "year": 2018,
+    "ideciclo_rating": 0.079
+  },
+  {
+    "city": "Cabo de Santo Agostinho",
+    "year": 2018,
+    "ideciclo_rating": null
+  },
+  {
+    "city": "Ipojuca",
+    "year": 2018,
+    "ideciclo_rating": null
+  },
+  {
+    "city": "Jaboatão dos Guararapes",
+    "year": 2018,
+    "ideciclo_rating": null
+  },
+  {
+    "city": "Olinda",
+    "year": 2018,
+    "ideciclo_rating": 0.131
+  },
+  {
+    "city": "Paulista",
+    "year": 2018,
+    "ideciclo_rating": 0.032
+  },
+  {
+    "city": "São Lourenço da Mata",
+    "year": 2018,
+    "ideciclo_rating": null
+  },
+  {
+    "city": "Brasília",
+    "year": 2018,
+    "ideciclo_rating": null
+  },
+  {
+    "city": "Belo Horizonte",
+    "year": 2018,
+    "ideciclo_rating": null
+  },
+  {
+    "city": "São Paulo",
+    "year": 2018,
+    "ideciclo_rating": null
+  }
+]
