@@ -7,6 +7,7 @@ defmodule Ideciclo.API do
   alias Ideciclo.Repo
 
   alias Ideciclo.API.City
+  alias Ideciclo.API.CityReview
 
   @doc """
   Returns the list of cities.
@@ -38,13 +39,15 @@ defmodule Ideciclo.API do
 
   """
   def get_city!(id) do
-    Repo.get!(City, id)
-    |> Repo.preload(:reviews)
+    City
+    |> where([c], c.id == type(^id, :integer))
+    |> Repo.one()
+    |> Repo.preload(reviews: from(cr in CityReview, order_by: [desc: cr.year]))
   end
 
-  def get_city_by_name!(name) do
-    Repo.get_by!(City, city: name)
-    |> Repo.preload(:reviews)
+  def get_city_by_name!(city) do
+    Repo.get_by!(City, city: city)
+    |> Repo.preload(reviews: from(cr in CityReview, order_by: [desc: cr.year]))
   end
 
   @doc """
@@ -159,7 +162,7 @@ defmodule Ideciclo.API do
 
   """
   def create_city_review(attrs \\ %{}) do
-  %CityReview{}
+    %CityReview{}
     |> CityReview.changeset(attrs)
     |> Repo.insert()
   end
@@ -323,6 +326,7 @@ defmodule Ideciclo.API do
     |> Repo.all()
     |> Repo.preload(:structure_type)
     |> Repo.preload(:city)
+    |> Repo.preload(reviews: [:structure])
   end
 
   @doc """
@@ -420,7 +424,7 @@ defmodule Ideciclo.API do
   def list_reviews do
     Review
     |> Repo.all()
-    |> Repo.preload(:structure)
+    |> Repo.preload(structure: [:city])
   end
 
   @doc """
@@ -437,7 +441,10 @@ defmodule Ideciclo.API do
       ** (Ecto.NoResultsError)
 
   """
-  def get_review!(id), do: Repo.get!(Review, id)
+  def get_review!(id) do
+    Repo.get!(Review, id)
+    |> Repo.preload(structure: [:city])
+  end
 
   @doc """
   Creates a review.

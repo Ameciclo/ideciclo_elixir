@@ -8,7 +8,7 @@ defmodule IdecicloWeb.Router do
   scope "/api", IdecicloWeb do
     scope "/v1", Api.V1, as: :v1 do
       pipe_through :api
-      resources "/cities", CityController, only: [:index, :show]
+      resources "/cities", CityController, only: [:index, :show], param: "city"
       resources "/structures", StructureController, except: [:new, :edit]
       resources "/reviews", ReviewController, except: [:new, :edit]
     end

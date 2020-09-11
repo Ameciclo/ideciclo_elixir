@@ -4,17 +4,18 @@ defmodule IdecicloWeb.Api.V1.ReviewView do
   alias IdecicloWeb.Api.V1.StructureView
 
   def render("index.json", %{reviews: reviews}) do
-    %{data: render_many(reviews, ReviewView, "review.json")}
+    render_many(reviews, ReviewView, "review.json")
   end
 
   def render("show.json", %{review: review}) do
-    %{data: render_one(review, ReviewView, "review.json")}
+    render_one(review, ReviewView, "review.json")
   end
 
   def render("review.json", %{review: review}) do
     %{
       id: review.id,
-      structure: review.structure.id,
+      city: review.structure.city.city,
+      structure: review.structure.street,
       reviewed_at: review.reviewed_at,
       reviewer: review.reviewer,
       average_rating: review.average_rating,

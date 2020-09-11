@@ -8,7 +8,6 @@ defmodule IdecicloWeb.Api.V1.ReviewController do
 
   def index(conn, _params) do
     reviews = API.list_reviews()
-    |> IO.inspect()
     render(conn, "index.json", reviews: reviews)
   end
 

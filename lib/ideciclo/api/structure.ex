@@ -8,6 +8,7 @@ defmodule Ideciclo.API.Structure do
     field :street, :string
     belongs_to :city, Ideciclo.API.City
     belongs_to :structure_type, Ideciclo.API.StructureType
+    has_many :reviews, Ideciclo.API.Review
 
     timestamps()
   end

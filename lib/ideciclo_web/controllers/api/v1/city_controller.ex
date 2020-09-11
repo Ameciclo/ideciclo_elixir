@@ -10,8 +10,8 @@ defmodule IdecicloWeb.Api.V1.CityController do
     render(conn, "index.json", cities: cities)
   end
 
-  def show(conn, %{"id" => id}) do
-    city = API.get_city!(id)
+  def show(conn, %{"city" => city}) do
+    city = API.get_city_by_name!(city)
     render(conn, "show.json", city: city)
   end
 
