@@ -21,7 +21,7 @@ defmodule IdecicloWeb.Api.V1.StructureView do
       extension: structure.extension,
       city: structure.city.city,
       structure_type: render_one(structure.structure_type, StructureTypeView, "structure_type.json"),
-      reviews: render_many(structure.reviews, ReviewView, "review.json")
+      reviews: render_many(structure.reviews, ReviewView, "assoc_review.json")
     }
   end
 end

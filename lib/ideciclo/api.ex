@@ -8,6 +8,8 @@ defmodule Ideciclo.API do
 
   alias Ideciclo.API.City
   alias Ideciclo.API.CityReview
+  alias Ideciclo.API.Structure
+  alias Ideciclo.API.Review
 
   @doc """
   Returns the list of cities.
@@ -46,8 +48,22 @@ defmodule Ideciclo.API do
   end
 
   def get_city_by_name!(city) do
-    Repo.get_by!(City, city: city)
+    city = Repo.get_by!(City, city: city)
     |> Repo.preload(reviews: from(cr in CityReview, order_by: [desc: cr.year]))
+    extension = Structure
+    |> where([s], s.city_id == ^city.id)
+    |> Repo.aggregate(:sum, :extension)
+    reviewCount = Structure
+    |> join(:inner, [s], r in Review, on: s.id == r.structure_id)
+    |> where(city_id: ^city.id)
+    |> Repo.aggregate(:count, :id)
+    currentReview = Enum.at(city.reviews, 0).ideciclo_rating
+    previousReview = Enum.at(city.reviews, 1).ideciclo_rating
+    city
+    |> Map.put(:currentReview, currentReview)
+    |> Map.put(:previousReview, previousReview)
+    |> Map.put(:reviewCount, reviewCount)
+    |> Map.put(:extension, extension)
   end
 
   @doc """
@@ -310,8 +326,6 @@ defmodule Ideciclo.API do
     StructureType.changeset(structure_type, attrs)
   end
 
-  alias Ideciclo.API.Structure
-
   @doc """
   Returns the list of structures.
 
@@ -326,7 +340,7 @@ defmodule Ideciclo.API do
     |> Repo.all()
     |> Repo.preload(:structure_type)
     |> Repo.preload(:city)
-    |> Repo.preload(reviews: [:structure])
+    |> Repo.preload(:reviews)
   end
 
   @doc """
@@ -409,8 +423,6 @@ defmodule Ideciclo.API do
   def change_structure(%Structure{} = structure, attrs \\ %{}) do
     Structure.changeset(structure, attrs)
   end
-
-  alias Ideciclo.API.Review
 
   @doc """
   Returns the list of reviews.

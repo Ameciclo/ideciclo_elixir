@@ -15,6 +15,10 @@ defmodule IdecicloWeb.Api.V1.CityView do
     %{id: city.id,
       city: city.city,
       state: city.state,
-      reviews: render_many(city.reviews, CityReviewView, "city_review.json")}
+      currentReview: city.currentReview,
+      previousReview: city.previousReview,
+      reviewCount: city.reviewCount,
+      extension: city.extension
+    }
   end
 end
