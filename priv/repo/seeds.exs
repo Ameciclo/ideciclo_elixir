@@ -96,7 +96,6 @@ with {:ok, body} <- File.read(reviews_file),
       |> Enum.reverse()
       |> Enum.join("-")
       |> Date.from_iso8601!()
-      case {:err, _} -> IO.inspect(err)
       Map.put(review, :reviewed_at, date)
       |> Map.put(:structure_id, structure.id)
       |> Ideciclo.API.create_review()
