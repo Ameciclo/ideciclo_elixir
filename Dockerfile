@@ -16,4 +16,6 @@ RUN mix local.rebar --force
 # Compile the project
 RUN mix do compile
 
+RUN chmod +x entrypoint.sh
+
 CMD ["/app/entrypoint.sh"]

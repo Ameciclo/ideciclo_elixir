@@ -1,4 +1,11 @@
 version: '3.6'
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
 services:
   db:
     environment:
@@ -6,10 +13,24 @@ services:
       POSTGRES_PASSWORD: ideciclo
       POSTGRES_USER: ideciclo
     image: 'postgres:12'
+    networks:
+      - internal
+    labels:
+      - "traefik.enable=false"
     restart: always
     volumes:
       - 'pgdata:/var/lib/postgresql/data'
   ideciclo_api:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ideciclo.rule=Host(`api.ideciclo.ameciclo.org`)"
+      - "traefik.http.routers.ideciclo.tls.certresolver=le"
+      - "traefik.http.middlewares.redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirectscheme.redirectscheme.permanent=true"
+      - "traefik.docker.network=web"
+    networks:
+      - internal
+      - web
     build: .
     depends_on:
       - db
