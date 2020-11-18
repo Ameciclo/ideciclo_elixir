@@ -12,7 +12,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_PASSWORD: ideciclo
       POSTGRES_USER: ideciclo
-    image: 'postgres:12'
+    image: 'postgres:13'
     networks:
       - internal
     labels:
@@ -32,20 +32,19 @@ services:
       - internal
       - web
     build: .
+    command: /bin/bash entrypoint.sh
     depends_on:
       - db
     environment:
       MIX_ENV: dev
       PGUSER: ideciclo
       PGPASSWORD: ideciclo
-      PGDATABASE: ideciclo
+      PGDATABASE: ideciclo_dev
       PGPORT: 5432
       PGHOST: db
     env_file:
       - .env
     ports:
       - '4000:4000'
-    volumes:
-      - .:/app
 volumes:
   pgdata:

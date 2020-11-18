@@ -1,21 +1,21 @@
-# Use an official Elixir runtime as a parent image
 FROM elixir:latest
 
+WORKDIR /ideciclo
+
 RUN apt-get update && \
-  apt-get install -y postgresql-client
+    apt-get install -y postgresql-client && \
+    apt-get install -y inotify-tools && \
+    mix local.hex --force && \
+    mix local.rebar --force
 
-# Create app directory and copy the Elixir projects into it
-RUN mkdir /app
-COPY . /app
-WORKDIR /app
+# Copy all dependencies files
+COPY mix.* ./
 
-# Install hex package manager
-RUN mix local.hex --force
-RUN mix local.rebar --force
+# Install all production dependencies
+RUN mix deps.get
 
-# Compile the project
-RUN mix do compile
+# Compile all dependencies
+RUN mix deps.compile
 
-RUN chmod +x entrypoint.sh
-
-CMD ["/app/entrypoint.sh"]
+# Copy all application files
+COPY . .
