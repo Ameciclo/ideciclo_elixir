@@ -19,7 +19,7 @@ services:
       - "traefik.enable=false"
     restart: always
     volumes:
-      - 'pgdata:/var/lib/postgresql/data'
+      - 'ideciclo_data:/var/lib/postgresql/data'
   ideciclo_api:
     labels:
       - "traefik.enable=true"
@@ -45,6 +45,6 @@ services:
     env_file:
       - .env
     ports:
-      - '4000:4000'
+      - '4004:4000'
 volumes:
-  pgdata:
+  ideciclo_data:
