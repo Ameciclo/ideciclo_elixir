@@ -61,32 +61,5 @@ defmodule Ideciclo.API.Review do
            :obstacles_rating
          ]
        )
-    |> validate_required(
-         [
-           :structure_id,
-           :reviewed_at,
-           :reviewer,
-           :average_rating,
-           :safety_rating,
-           :comfort_rating,
-           :adequacy_rating,
-           :protection_rating,
-           :speed_control_rating,
-           :hor_cross_sign_rating,
-           :avg_structure_width,
-           :hor_sign_rating,
-           :ver_sign_rating,
-           :ver_cross_sign_rating,
-           :pattern_paint_rating,
-           :hor_sign_condition_rating,
-           :risk_rating,
-           :sinuosity_rating,
-           :bidirectionality_rating,
-           :shading_rating,
-           :type_pavement_rating,
-           :pavement_condition_rating,
-           :obstacles_rating
-         ]
-       )
   end
 end

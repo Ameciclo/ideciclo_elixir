@@ -6,6 +6,7 @@ defmodule Ideciclo.Repo.Migrations.CreateStructures do
       add :street, :string
       add :max_speed, :integer
       add :extension, :float
+      add :average_rating, :float, default: nil
       add :city_id, references(:cities, on_delete: :nothing)
       add :structure_type_id, references(:structure_types, on_delete: :nothing)
 

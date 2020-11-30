@@ -6,6 +6,7 @@ defmodule Ideciclo.API.Structure do
     field :extension, :float
     field :max_speed, :integer
     field :street, :string
+    field :average_rating, :float
     belongs_to :city, Ideciclo.API.City
     belongs_to :structure_type, Ideciclo.API.StructureType
     has_many :reviews, Ideciclo.API.Review
@@ -16,7 +17,6 @@ defmodule Ideciclo.API.Structure do
   @doc false
   def changeset(structure, attrs) do
     structure
-    |> cast(attrs, [:city_id, :structure_type_id, :street, :max_speed, :extension])
-    |> validate_required([:city_id, :structure_type_id, :street, :max_speed, :extension])
+    |> cast(attrs, [:city_id, :structure_type_id, :street, :max_speed, :extension, :average_rating])
   end
 end

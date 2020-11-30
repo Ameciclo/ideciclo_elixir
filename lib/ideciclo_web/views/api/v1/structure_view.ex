@@ -16,6 +16,7 @@ defmodule IdecicloWeb.Api.V1.StructureView do
   def render("structure.json", %{structure: structure}) do
     %{
       id: structure.id,
+      average_rating: structure.average_rating,
       street: structure.street,
       max_speed: structure.max_speed,
       extension: structure.extension,

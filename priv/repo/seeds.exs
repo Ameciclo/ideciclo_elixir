@@ -36,12 +36,14 @@ Enum.each(
 )
 
 cityReviews_file = "#{__DIR__}/seeds/cityReviews.json"
+
 with {:ok, body} <- File.read(cityReviews_file),
      {:ok, cityReviews} <- Jason.decode(body, keys: :atoms) do
   Enum.each(
     cityReviews,
     fn cityReview ->
       city = Repo.get_by!(City, city: cityReview.city)
+
       cityReview
       |> Map.put(:city, city)
       |> Ideciclo.API.create_city_review()
@@ -63,16 +65,22 @@ structureTypes = [
   %{name: "Calçada Compartilhada", typology: "Bidirecional"}
 ]
 
-Enum.each(structureTypes, fn structureType -> Ideciclo.API.create_structure_type(structureType) end)
+Enum.each(structureTypes, fn structureType ->
+  Ideciclo.API.create_structure_type(structureType)
+end)
 
 structures_file = "#{__DIR__}/seeds/structures.json"
+
 with {:ok, body} <- File.read(structures_file),
      {:ok, structures} <- Jason.decode(body, keys: :atoms) do
   Enum.each(
     structures,
     fn structure ->
       city = Repo.get_by!(City, city: structure.city)
-      structure_type = Repo.get_by!(StructureType, [name: structure.type, typology: structure.typology])
+
+      structure_type =
+        Repo.get_by!(StructureType, name: structure.type, typology: structure.typology)
+
       structure
       |> Map.put(:city_id, city.id)
       |> Map.put(:structure_type_id, structure_type.id)
@@ -85,6 +93,7 @@ else
 end
 
 reviews_file = "#{__DIR__}/seeds/reviews.json"
+
 with {:ok, body} <- File.read(reviews_file),
      {:ok, reviews} <- Jason.decode(body, keys: :atoms) do
   Enum.each(
@@ -92,10 +101,13 @@ with {:ok, body} <- File.read(reviews_file),
     fn review ->
       structure = Repo.get_by!(Structure, street: review.street)
       review
-      date = String.split(review.reviewed_at, "/")
-      |> Enum.reverse()
-      |> Enum.join("-")
-      |> Date.from_iso8601!()
+
+      date =
+        String.split(review.reviewed_at, "/")
+        |> Enum.reverse()
+        |> Enum.join("-")
+        |> Date.from_iso8601!()
+
       Map.put(review, :reviewed_at, date)
       |> Map.put(:structure_id, structure.id)
       |> Ideciclo.API.create_review()
@@ -105,3 +117,15 @@ else
   err ->
     IO.inspect(err)
 end
+
+Repo.all(Structure)
+|> Repo.preload(:reviews)
+|> Enum.each(fn structure ->
+  if Enum.count(structure.reviews) > 0 do
+    average_rating =
+      Enum.reduce(structure.reviews, 0, fn r, acc -> r.average_rating + acc end) /
+        Enum.count(structure.reviews)
+
+    Ideciclo.API.update_structure(structure, %{average_rating: average_rating})
+  end
+end)
