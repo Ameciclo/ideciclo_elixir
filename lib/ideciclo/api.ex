@@ -48,17 +48,26 @@ defmodule Ideciclo.API do
   end
 
   def get_city_by_name!(city) do
-    city = Repo.get_by!(City, city: city)
-    |> Repo.preload(reviews: from(cr in CityReview, order_by: [desc: cr.year]))
-    extension = Structure
-    |> where([s], s.city_id == ^city.id)
-    |> Repo.aggregate(:sum, :extension)
-    reviewCount = Structure
-    |> join(:inner, [s], r in Review, on: s.id == r.structure_id)
-    |> where(city_id: ^city.id)
-    |> Repo.aggregate(:count, :id)
+    city =
+      Repo.get_by!(City, city: city)
+      |> Repo.preload(reviews: from(cr in CityReview, order_by: [desc: cr.year]))
+
+    extension =
+      Structure
+      |> where([s], s.city_id == ^city.id)
+      |> Repo.aggregate(:sum, :extension)
+
+    reviewCount =
+      Structure
+      |> join(:inner, [s], r in Review, on: s.id == r.structure_id)
+      |> where(city_id: ^city.id)
+      |> Repo.aggregate(:count, :id)
+
     currentReview = Enum.at(city.reviews, 0).ideciclo_rating
-    previousReview = Enum.at(city.reviews, 1).ideciclo_rating
+    previousReview = nil
+
+    if(Enum.count(city.reviews > 1), do: previousReview = Enum.at(city.reviews, 1).ideciclo_rating)
+
     city
     |> Map.put(:currentReview, currentReview)
     |> Map.put(:previousReview, previousReview)
@@ -474,7 +483,6 @@ defmodule Ideciclo.API do
     %Review{}
     |> Review.changeset(attrs)
     |> Repo.insert()
-
   end
 
   @doc """
