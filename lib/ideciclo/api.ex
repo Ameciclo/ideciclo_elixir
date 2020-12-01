@@ -66,7 +66,7 @@ defmodule Ideciclo.API do
     currentReview = Enum.at(city.reviews, 0).ideciclo_rating
     previousReview = nil
 
-    if(Enum.count(city.reviews > 1), do: previousReview = Enum.at(city.reviews, 1).ideciclo_rating)
+    if(Enum.count(city.reviews) >= 1, do: previousReview = Enum.at(city.reviews, 1).ideciclo_rating)
 
     city
     |> Map.put(:currentReview, currentReview)
