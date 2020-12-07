@@ -349,7 +349,7 @@ defmodule Ideciclo.API do
       [%Structure{}, ...]
 
   """
-  def list_structures do
+  def list_structures(city) when is_nil(city) do
     Structure
     |> Repo.all()
     |> Repo.preload(:structure_type)
@@ -357,7 +357,7 @@ defmodule Ideciclo.API do
     |> Repo.preload(:reviews)
   end
 
-  def list_structures(%{"city" => city} = _city) do
+  def list_structures(city) do
     city = Repo.get_by!(City, city: city)
     q = from s in Structure,
              where: s.city_id == ^city.id

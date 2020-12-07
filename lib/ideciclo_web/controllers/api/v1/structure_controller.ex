@@ -6,13 +6,13 @@ defmodule IdecicloWeb.Api.V1.StructureController do
 
   action_fallback IdecicloWeb.FallbackController
 
-  def index(conn, _params) do
-    structures = API.list_structures()
+  def index(conn, %{"city" => city} = _params) do
+    structures = API.list_structures(city)
     render(conn, "index.json", structures: structures)
   end
 
-  def index(conn, %{"city" => city} = _params) do
-    structures = API.list_structures(city)
+  def index(conn, _params) do
+    structures = API.list_structures(nil)
     render(conn, "index.json", structures: structures)
   end
 
