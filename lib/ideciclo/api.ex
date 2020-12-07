@@ -357,6 +357,16 @@ defmodule Ideciclo.API do
     |> Repo.preload(:reviews)
   end
 
+  def list_structures(%{"city" => city} = _city) do
+    city = Repo.get_by!(City, city: city)
+    q = from s in Structure,
+             where: s.city_id == ^city.id
+    Repo.all(q)
+    |> Repo.preload(:city)
+    |> Repo.preload(:structure_type)
+    |> Repo.preload(:reviews)
+  end
+
   @doc """
   Gets a single structure.
 
@@ -371,7 +381,13 @@ defmodule Ideciclo.API do
       ** (Ecto.NoResultsError)
 
   """
-  def get_structure!(id), do: Repo.get!(Structure, id)
+  def get_structure!(id) do
+    Structure
+    |> Repo.get!(id)
+    |> Repo.preload(:city)
+    |> Repo.preload(:structure_type)
+    |> Repo.preload(:reviews)
+  end
 
   @doc """
   Creates a structure.

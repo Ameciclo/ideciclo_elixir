@@ -11,6 +11,11 @@ defmodule IdecicloWeb.Api.V1.StructureController do
     render(conn, "index.json", structures: structures)
   end
 
+  def index(conn, %{"city" => city} = _params) do
+    structures = API.list_structures(city)
+    render(conn, "index.json", structures: structures)
+  end
+
   def create(conn, %{"structure" => structure_params}) do
     with {:ok, %Structure{} = structure} <- API.create_structure(structure_params) do
       conn
