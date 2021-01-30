@@ -36,7 +36,6 @@ services:
     depends_on:
       - db
     environment:
-      MIX_ENV: dev
       PGUSER: ideciclo
       PGPASSWORD: ideciclo
       PGDATABASE: ideciclo_dev

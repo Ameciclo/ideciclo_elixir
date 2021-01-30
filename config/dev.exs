@@ -4,7 +4,10 @@ database_url = System.get_env("DATABASE_URL")
 
 # Configure your database
 config :ideciclo, Ideciclo.Repo,
-  url: database_url,
+  username: "pedro_paes",
+  password: "",
+  database: "ideciclo_dev",
+  hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
