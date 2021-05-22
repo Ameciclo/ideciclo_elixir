@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/elixir:1.9
+        environment:
+          MIX_ENV: test
+      - image: circleci/postgres:9.4
+        environment:
+          POSTGRES_PASSWORD: ideciclo
+          POSTGRES_USER: ideciclo
+          POSTGRES_DB: ideciclo_test
+
+    working_directory: ~/ideciclo
+    steps:
+      - checkout
+
+      - run: mix deps.get
+      - run: mix ecto.create
+      - run: mix test
