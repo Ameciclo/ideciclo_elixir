@@ -68,12 +68,18 @@ jobs:
       - store_test_results:  # upload junit test results for display in Test Summary
           # Read more: https://circleci.com/docs/2.0/collect-test-data/
           path: _build/test/lib/ideciclo # Replace with the name of your :app
+      - persist_to_workspace:
+          root: ~/ideciclo
+          paths: 
+            - .
 
   docker-build:
     working_directory: ~/ideciclo
     executor: docker-publisher
     steps:
       - setup_remote_docker
+      - attach_workspace:
+          at: ~/ideciclo
       - run:
           name: Build Docker image
           command: |
