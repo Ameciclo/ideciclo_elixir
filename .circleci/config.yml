@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 executors:
   docker-publisher:
     environment:
@@ -7,22 +7,20 @@ executors:
       - image: circleci/buildpack-deps:stretch
 workflows:
   build-latest:
-  jobs:
-    - build_and_test:
-        requires:
-          - checkout
-    - docker-build:
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
-    - publish-latest:
-        requires:
-          - docker-build
-        filters:
-          branches:
-            only: master
+    jobs:
+      - build_and_test
+      - docker-build:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          requires:
+            - docker-build
+          filters:
+            branches:
+              only: master
   
 jobs:
   build_and_test:
