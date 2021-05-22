@@ -1,21 +1,30 @@
-FROM elixir:latest
+FROM elixir:1.9.0-alpine AS build
+RUN apk add --no-cache build-base git python
+WORKDIR /ideciclo
+RUN mix local.hex --force && \
+    mix local.rebar --force
+ENV DATABASE_URL=${DATABASE_URL} \
+  SECRET_KEY_BASE=${SECRET_KEY_BASE} \
+  MIX_ENV=prod
+COPY mix.exs mix.lock ./
+COPY config config
+RUN mix do deps.get, deps.compile
+COPY priv priv
+RUN mix phx.digest
+COPY lib lib
+RUN mix do compile, release
+
+FROM alpine:3.9 AS app
+RUN apk add --no-cache openssl ncurses-libs
 
 WORKDIR /ideciclo
 
-RUN apt-get update && \
-    apt-get install -y postgresql-client && \
-    apt-get install -y inotify-tools && \
-    mix local.hex --force && \
-    mix local.rebar --force
+RUN chown nobody:nobody /ideciclo
 
-# Copy all dependencies files
-COPY mix.* ./
+USER nobody:nobody
 
-# Install all production dependencies
-RUN mix deps.get
+COPY --from=build --chown=nobody:nobody /ideciclo/_build/prod/rel/ideciclo ./
 
-# Compile all dependencies
-RUN mix deps.compile
+ENV HOME=/ideciclo
 
-# Copy all application files
-COPY . .
+CMD ["bin/ideciclo", "start"]
