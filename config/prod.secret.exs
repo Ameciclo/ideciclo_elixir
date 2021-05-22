@@ -13,7 +13,7 @@ database_url =
 
 config :ideciclo, Ideciclo.Repo,
   # ssl: true,
-  database: "ideciclo_dev",
+  database: "ideciclo",
   username: "ideciclo",
   password: "ideciclo",
   hostname: "db",
