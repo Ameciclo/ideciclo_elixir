@@ -18,5 +18,6 @@ defmodule Ideciclo.API.Structure do
   def changeset(structure, attrs) do
     structure
     |> cast(attrs, [:city_id, :structure_type_id, :street, :max_speed, :extension, :average_rating])
+    |> validate_required([:extension, :max_speed, :street])
   end
 end

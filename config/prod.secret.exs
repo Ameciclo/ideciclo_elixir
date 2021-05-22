@@ -13,7 +13,11 @@ database_url =
 
 config :ideciclo, Ideciclo.Repo,
   # ssl: true,
-  url: database_url,
+  database: "ideciclo_dev",
+  username: "ideciclo",
+  password: "ideciclo",
+  hostname: "db",
+  port: "5432",
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 secret_key_base =
@@ -25,7 +29,7 @@ secret_key_base =
 
 config :ideciclo, IdecicloWeb.Endpoint,
   http: [
-    port: String.to_integer(System.get_env("PORT") || "4000"),
+    port: String.to_integer(System.get_env("PORT") || "4444"),
     transport_options: [socket_opts: [:inet6]]
   ],
   secret_key_base: secret_key_base
@@ -35,7 +39,7 @@ config :ideciclo, IdecicloWeb.Endpoint,
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-#     config :ideciclo, IdecicloWeb.Endpoint, server: true
+config :ideciclo, IdecicloWeb.Endpoint, server: true
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
