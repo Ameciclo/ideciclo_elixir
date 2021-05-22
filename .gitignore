@@ -61,3 +61,5 @@ ideciclo-*.tar
 .DS_Store
 
 pgdata
+
+.env
