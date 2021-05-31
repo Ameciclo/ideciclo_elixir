@@ -2,7 +2,7 @@ FROM elixir:1.9.0-alpine AS build
 RUN apk add --no-cache build-base git python
 WORKDIR /ideciclo
 RUN mix local.hex --force && \
-    mix local.rebar --force
+  mix local.rebar --force
 ENV DATABASE_URL=${DATABASE_URL} \
   SECRET_KEY_BASE=${SECRET_KEY_BASE} \
   MIX_ENV=prod
@@ -14,7 +14,7 @@ RUN mix phx.digest
 COPY lib lib
 RUN mix do compile, release
 
-FROM alpine:3.11 AS app
+FROM alpine:3.9 AS app
 RUN apk add --no-cache openssl ncurses-libs
 
 WORKDIR /ideciclo
