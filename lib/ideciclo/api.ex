@@ -51,22 +51,27 @@ defmodule Ideciclo.API do
     city =
       Repo.get_by!(City, city: city)
       |> Repo.preload(reviews: from(cr in CityReview, order_by: [desc: cr.year]))
+
     extension =
       Structure
       |> where([s], s.city_id == ^city.id)
       |> Repo.aggregate(:sum, :extension)
+
     reviewCount =
       Structure
       |> join(:inner, [s], r in Review, on: s.id == r.structure_id)
       |> where(city_id: ^city.id)
       |> Repo.aggregate(:count, :id)
 
-    currentReview = Enum.count(city.reviews) > 0 && Enum.at(city.reviews, 0) || nil
-    previousReview = if Enum.count(city.reviews) > 1 do
-      Enum.at(city.reviews, 1).ideciclo_rating
-    else
-      nil
-    end
+    currentReview =
+      (Enum.count(city.reviews) > 0 && Enum.at(city.reviews, 0).ideciclo_rating) || nil
+
+    previousReview =
+      if Enum.count(city.reviews) > 1 do
+        Enum.at(city.reviews, 1).ideciclo_rating
+      else
+        nil
+      end
 
     city
     |> Map.put(:currentReview, currentReview)
@@ -354,8 +359,11 @@ defmodule Ideciclo.API do
 
   def list_structures(city) do
     city = Repo.get_by!(City, city: city)
-    q = from s in Structure,
-             where: s.city_id == ^city.id
+
+    q =
+      from s in Structure,
+        where: s.city_id == ^city.id
+
     Repo.all(q)
     |> Repo.preload(:city)
     |> Repo.preload(:structure_type)
